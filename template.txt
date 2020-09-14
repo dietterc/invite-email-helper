@@ -1,0 +1,9 @@
+Hey {name}!
+
+You can use this invite link to join the discord server:
+{invite}
+
+This is a single use invite meant for you to use, so please don't share it with anyone.
+After joining, make sure to check out the #welcome channel. We look forward to seeing you there!
+
+- Colton Dietterle, CSSA Executive
