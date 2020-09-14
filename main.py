@@ -32,6 +32,10 @@ def main():
 
     emailBodies = generateEmails(startIndex)
 
+    newInvites = getDiscordInvites(len(emailBodies))
+
+
+    
 
 
 def generateEmails(startIndex):
@@ -70,9 +74,58 @@ def generateEmails(startIndex):
     emailTemplates = []
 
     for i in range(len(goodEntries)):
-        currentTemplate = template.format(name = names[goodEntries[i]])
+
+        firstName = names[goodEntries[i]].split(" ")[0]
+
+        currentTemplate = template.format(name = firstName, invite = "{invite}")
         emailTemplates.append(currentTemplate)
 
     return emailTemplates
+
+
+def getDiscordInvites(numInvites):
+
+    global invites
+    confirm = ""
+
+    while(confirm != 'y'):
+        newInvites = []
+
+        count = 0
+        while(count < numInvites):
+            invite = input("Enter discord invite {curr}/{total}:\n".format(curr = count, total = numInvites))
+            if(invite.startswith("https://discord.gg/")):
+                found = False
+                for i in range(len(invites)):
+                    if(invites[i] == invite):
+                        found = True
+                
+                #check new invites too
+                for i in range(len(newInvites)):
+                    if(newInvites[i] == invite):
+                        found = True
+                    
+                if(found):
+                    print("Invalid invite - Already in use")
+                else:
+                    newInvites.append(invite)
+                    count += 1
+
+            else:
+                print("Invalid invite - Invite must start with https://discord.gg/")
+
+        print("\nInvites received:")
+        for i in range(len(newInvites)):
+            print(newInvites[i])
+        print("")
+
+        while(confirm != 'y' and confirm != 'n'):
+            confirm = input("Are the above invites okay? (y/n) ")
+
+        if confirm == 'y':
+            return newInvites
+        else:
+            confirm = ""
+
 
 main()
