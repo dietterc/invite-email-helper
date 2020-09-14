@@ -68,21 +68,20 @@ def generateEmails(startIndex):
             flaggedIndexes.append(i)
 
     #Check if its a myumanitoba email 
-    for i in range(len(noDuplicates)):
-        currentIndex = noDuplicates[i]
+    for i in noDuplicates:
 
-        if emails[currentIndex].endswith("@myumanitoba.ca"):
-            goodEntries.append(currentIndex)
+        if emails[i].endswith("@myumanitoba.ca"):
+            goodEntries.append(i)
         else:
-            flaggedIndexes.append(currentIndex)
+            flaggedIndexes.append(i)
             
     
     template = open("template.txt","r").read()
     emailTemplates = []
 
-    for i in range(len(goodEntries)):
+    for i in goodEntries:
 
-        firstName = names[goodEntries[i]].split(" ")[0]
+        firstName = names[i].split(" ")[0]
 
         currentTemplate = template.format(name = firstName, invite = "{invite}")
         emailTemplates.append(currentTemplate)
@@ -104,13 +103,13 @@ def getDiscordInvites(numInvites):
             invite = input("Enter discord invite {curr}/{total}:\n".format(curr = count, total = numInvites))
             if(invite.startswith("https://discord.gg/")):
                 found = False
-                for i in range(len(invites)):
-                    if(invites[i] == invite):
+                for i in invites:
+                    if(i == invite):
                         found = True
                 
                 #check new invites too
-                for i in range(len(newInvites)):
-                    if(newInvites[i] == invite):
+                for i in newInvites:
+                    if(i == invite):
                         found = True
                     
                 if(found):
@@ -123,8 +122,8 @@ def getDiscordInvites(numInvites):
                 print("Invalid invite - Invite must start with https://discord.gg/")
 
         print("\nInvites received:")
-        for i in range(len(newInvites)):
-            print(newInvites[i])
+        for i in newInvites:
+            print(i)
         print("")
 
         while(confirm != 'y' and confirm != 'n'):
