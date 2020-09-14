@@ -22,6 +22,10 @@ usernames = responsesSheet.col_values(5)
 invites = responsesSheet.col_values(6)
 
 
+#list of flagged indexes (form entries that threw some kind of error)
+flaggedIndexes = []
+
+
 def main():
 
     startIndex = int(input("What line are we starting at? ")) - 1
@@ -32,12 +36,43 @@ def main():
 
 def generateEmails(startIndex):
     global names
-
+    global emails
+    global flaggedIndexes
     emailCount = len(names) - startIndex
+    noDuplicates = []
+    goodEntries = []
 
-    print(emailCount)
+    #for each user starting at the given index, check if they have already signed up for the form. 
+    for i in range(startIndex, startIndex + emailCount):
+        found = False
 
+        for j in range(startIndex + (i - startIndex)):
+            if(emails[i] == emails[j]):
+                found = True
 
+        if not found:
+            noDuplicates.append(i)
+        else:
+            #duplicate entry found
+            flaggedIndexes.append(i)
 
+    #Check if its a myumanitoba email 
+    for i in range(len(noDuplicates)):
+        currentIndex = noDuplicates[i]
+
+        if emails[currentIndex].endswith("@myumanitoba.ca"):
+            goodEntries.append(currentIndex)
+        else:
+            flaggedIndexes.append(currentIndex)
+            
+    
+    template = open("template.txt","r").read()
+    emailTemplates = []
+
+    for i in range(len(goodEntries)):
+        currentTemplate = template.format(name = names[goodEntries[i]])
+        emailTemplates.append(currentTemplate)
+
+    return emailTemplates
 
 main()
