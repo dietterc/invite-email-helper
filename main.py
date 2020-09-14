@@ -25,6 +25,10 @@ invites = responsesSheet.col_values(6)
 #list of flagged indexes (form entries that threw some kind of error)
 flaggedIndexes = []
 
+goodIndexes = []
+
+SUBJECT = "UManitoba Computer Science Discord Invitation"
+
 
 def main():
 
@@ -34,12 +38,17 @@ def main():
 
     newInvites = getDiscordInvites(len(emailBodies))
 
-    
+    finalEmails = compileEmails(emailBodies,newInvites)
+
+    for i in finalEmails:
+        i.printEmail()
 
 def generateEmails(startIndex):
     global names
     global emails
     global flaggedIndexes
+    global goodIndexes
+
     emailCount = len(names) - startIndex
     noDuplicates = []
     goodEntries = []
@@ -78,6 +87,7 @@ def generateEmails(startIndex):
         currentTemplate = template.format(name = firstName, invite = "{invite}")
         emailTemplates.append(currentTemplate)
 
+    goodIndexes = goodEntries
     return emailTemplates
 
 
@@ -126,10 +136,29 @@ def getDiscordInvites(numInvites):
             confirm = ""
 
 
+def compileEmails(bodies,newInvites):
+    global emails
+    global goodIndexes
+
+    finalEmails = []
+    for i in range(len(goodIndexes)):
+        body = bodies[i].format(invite = newInvites[i])
+        finalEmails.append(Email(emails[goodIndexes[i]],SUBJECT,body))
+
+    return finalEmails
+
+
+
 class Email:
     def __init__(self, dest, subject, body):
         self.dest = dest
         self.subject = subject
         self.body = body
+
+    def printEmail(self):
+        print("TO:\n" + self.dest + "\n")
+        print("SUBJECT:\n" + self.subject + "\n")
+        print("BODY:\n" + self.body + "\n-----------------")
+
 
 main()
