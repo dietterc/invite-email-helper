@@ -15,3 +15,10 @@ Process repeats until there are no more email previews
 Should skip over emails that aren't myumanitoba emails  
 should make sure that there arent any repeated discord invite links   
 should write back all used invite links to the spreadsheet once finished 
+
+
+TODO:  
+add scrolling  
+ability to send emails  
+mark flagged indexes  
+fill in used invites once sent  
