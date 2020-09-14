@@ -21,6 +21,23 @@ emails = responsesSheet.col_values(3)
 usernames = responsesSheet.col_values(5)
 invites = responsesSheet.col_values(6)
 
-startingPoint = int(input("What line are we starting at? ")) - 1
 
-print(names[startingPoint])
+def main():
+
+    startIndex = int(input("What line are we starting at? ")) - 1
+
+    emailBodies = generateEmails(startIndex)
+
+
+
+def generateEmails(startIndex):
+    global names
+
+    emailCount = len(names) - startIndex
+
+    print(emailCount)
+
+
+
+
+main()
