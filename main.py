@@ -34,9 +34,7 @@ def main():
 
     newInvites = getDiscordInvites(len(emailBodies))
 
-
     
-
 
 def generateEmails(startIndex):
     global names
@@ -127,5 +125,11 @@ def getDiscordInvites(numInvites):
         else:
             confirm = ""
 
+
+class Email:
+    def __init__(self, dest, subject, body):
+        self.dest = dest
+        self.subject = subject
+        self.body = body
 
 main()
