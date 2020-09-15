@@ -183,6 +183,7 @@ def printFooter(index):
     print("Use the arrow keys to navigate")
     print("ENTER to confirm and send email")
     print("DELETE to flag (and not send)")
+    print("Q to quit")
 
 
 def generateEmails(startIndex):
