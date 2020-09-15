@@ -24,13 +24,15 @@ invites = responsesSheet.col_values(6)
 
 #list of flagged indexes (form entries that threw some kind of error)
 flaggedIndexes = []
-
 goodIndexes = []
+finalEmails = []
 
 SUBJECT = "UManitoba Computer Science Discord Invitation"
 
+viewIndex = -1
 
 def main():
+    global finalEmails
 
     startIndex = int(input("What line are we starting at? ")) - 1
 
@@ -40,8 +42,99 @@ def main():
 
     finalEmails = compileEmails(emailBodies,newInvites)
 
-    for i in finalEmails:
-        i.printEmail()
+    #clear the terminal
+    os.system('cls')
+
+    print("Use the left and right arrow keys to scroll between email previews.")
+
+    hm = pyHook.HookManager()
+    hm.KeyDown = OnKeyboardEvent
+    hm.HookKeyboard()
+
+    while True:
+        pythoncom.PumpWaitingMessages()
+        if(len(finalEmails) == 0):
+            break
+
+    flagIndexes()
+    print("Finished.")
+
+def OnKeyboardEvent(event): 
+    global viewIndex
+    global finalEmails
+    global goodIndexes
+    key = event.Key
+
+    if key == 'Left':
+        if(viewIndex > 0):
+            viewIndex -= 1
+            os.system('cls')
+            finalEmails[viewIndex].printEmail()
+            printFooter(viewIndex)
+            
+    elif key == 'Right':
+        if(viewIndex != len(finalEmails) -1):
+            viewIndex += 1
+            os.system('cls')
+            finalEmails[viewIndex].printEmail()
+            printFooter(viewIndex)
+    elif key == 'Q':
+        flagIndexes()
+        exit(0)
+    elif key == "Return":
+        sendEmail(finalEmails[viewIndex],goodIndexes[viewIndex])
+    elif key == "Delete":
+        flaggedIndexes.append(goodIndexes[viewIndex])
+        finalEmails.remove(finalEmails[viewIndex])
+        goodIndexes.remove(goodIndexes[viewIndex])
+        os.system('cls')
+
+        print("\nIndex flagged.\n-----------------\n")
+        print("Use the arrow keys to navigate")
+        viewIndex = -1
+
+    return True
+
+def sendEmail(email,index):
+    global finalEmails
+    global goodIndexes
+    global viewIndex
+
+    os.system('cls')
+    print("\nEmail sent!\n-----------------\n")
+    print("Use the arrow keys to navigate")
+
+    #send the email here
+
+
+    #if it sent then add the discord invite to the spreadsheet
+    #but first get the discord invite from the email
+    bodyWords = email.body.split("\n")
+    invite = ""
+    for i in bodyWords:
+        if i.startswith("https://discord.gg/"):
+            invite = i
+
+    responsesSheet.update_cell(index+1,6,invite)
+
+    viewIndex = -1
+    finalEmails.remove(email)
+    goodIndexes.remove(index)
+
+def flagIndexes():
+    global flaggedIndexes
+
+    for i in flaggedIndexes:
+        responsesSheet.update_cell(i+1,7,"FLAGGED")
+
+
+
+def printFooter(index):
+    print("Email {i} of {totalIndex}\n".format(i=index + 1,totalIndex=len(finalEmails)))
+    print("Use the arrow keys to navigate")
+    print("ENTER to confirm and send email")
+    print("DELETE to flag (and not send)")
+
 
 def generateEmails(startIndex):
     global names
