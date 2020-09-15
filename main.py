@@ -29,6 +29,7 @@ invites = responsesSheet.col_values(6)
 flaggedIndexes = []
 goodIndexes = []
 finalEmails = []
+unusedInvites = []
 
 SUBJECT = "UManitoba Computer Science Discord Invitation"
 
@@ -60,12 +61,18 @@ def main():
             break
 
     flagIndexes()
-    print("Finished.")
+    print("Finished.\n")
+
+    if(len(unusedInvites) > 0):
+        print("Here are the unused discord invites:")
+        for i in unusedInvites:
+            print(i)
 
 def OnKeyboardEvent(event): 
     global viewIndex
     global finalEmails
     global goodIndexes
+    global unusedInvites
     key = event.Key
 
     if key == 'Left':
@@ -87,6 +94,14 @@ def OnKeyboardEvent(event):
     elif key == "Return":
         sendEmail(finalEmails[viewIndex],goodIndexes[viewIndex])
     elif key == "Delete":
+        #Extract the unused invite link
+        bodyWords = finalEmails[viewIndex].body.split("\n")
+        invite = ""
+        for i in bodyWords:
+            if i.startswith("https://discord.gg/"):
+                invite = i
+        unusedInvites.append(invite)
+
         flaggedIndexes.append(goodIndexes[viewIndex])
         finalEmails.remove(finalEmails[viewIndex])
         goodIndexes.remove(goodIndexes[viewIndex])
@@ -104,6 +119,7 @@ def sendEmail(email,index):
     global viewIndex
 
     os.system('cls')
+    print("Sending email...\n")
 
     #get the discord invite from the email
     bodyWords = email.body.split("\n")
