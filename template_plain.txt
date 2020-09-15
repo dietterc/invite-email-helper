@@ -7,3 +7,8 @@ This is a single use invite meant for you to use, so please don't share it with 
 After joining, make sure to check out the #welcome channel. We look forward to seeing you there!
 
 - Colton Dietterle, CSSA Executive
+
+
+Was this message sent to you by accident? Has the link expired? Send us a reply and we can sort things out!
+
+This message was sent with python, if there were any issues please send a reply!
