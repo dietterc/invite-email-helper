@@ -1,7 +1,8 @@
 <html>
   <body>
     <p>Hey {name}!<br><br>
-       You can use this invite link to join the discord server:<br>{invite}
+       You can use this invite link to join the discord server:<br>
+{invite}
 	<br><br>
 	This is a single use invite meant for you to use, so please don't share it with anyone.<br>
 	After joining, make sure to check out the #welcome channel. We look forward to seeing you there!

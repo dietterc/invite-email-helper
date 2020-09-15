@@ -1,6 +1,9 @@
 import sys
 import os
 import pyHook, pythoncom
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 
 #Google api stuff
 import gspread
@@ -101,25 +104,55 @@ def sendEmail(email,index):
     global viewIndex
 
     os.system('cls')
-    print("\nEmail sent!\n-----------------\n")
-    print("Use the arrow keys to navigate")
 
-    #send the email here
-
-
-    #if it sent then add the discord invite to the spreadsheet
-    #but first get the discord invite from the email
+    #get the discord invite from the email
     bodyWords = email.body.split("\n")
     invite = ""
     for i in bodyWords:
         if i.startswith("https://discord.gg/"):
             invite = i
 
-    responsesSheet.update_cell(index+1,6,invite)
+    #prep and send the email
+    sender_email = 'cssadiscordinvites@gmail.com'
+    gmail_password = open("gmail_password.txt","r").read()
 
-    viewIndex = -1
-    finalEmails.remove(email)
-    goodIndexes.remove(index)
+    #just me for now
+    receiver_email = "dietterc@myumanitoba.ca"
+
+    message = MIMEMultipart("alternative")
+    message["Subject"] = email.subject
+    message["From"] = "UofM CS Discord Form <" + sender_email + ">"
+    message["To"] = receiver_email
+
+    text = open("template_plain.txt","r").read().format(d_invite = invite)
+
+    html = email.body
+
+    message.attach(MIMEText(text, "plain"))
+    message.attach(MIMEText(html, "html"))
+
+    try:
+        server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
+        server.ehlo()
+        server.login(sender_email, gmail_password)
+        server.sendmail(sender_email, receiver_email, message.as_string())
+        server.close()
+
+        print("\nEmail sent!\n-----------------\n")
+        print("Use the arrow keys to navigate")
+
+        #if it sent then add the discord invite to the spreadsheet
+        responsesSheet.update_cell(index+1,6,invite)
+
+        viewIndex = -1
+        finalEmails.remove(email)
+        goodIndexes.remove(index)
+
+    except:
+        print("\nSomething went wrong... Email not sent.\n-----------------\n")
+        print("Use the arrow keys to navigate")
+        viewIndex = -1
+
 
 def flagIndexes():
     global flaggedIndexes
@@ -169,7 +202,7 @@ def generateEmails(startIndex):
             flaggedIndexes.append(i)
             
     
-    template = open("template.txt","r").read()
+    template = open("template_html.txt","r").read()
     emailTemplates = []
 
     for i in goodEntries:
