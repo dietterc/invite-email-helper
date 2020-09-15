@@ -132,8 +132,7 @@ def sendEmail(email,index):
     sender_email = 'cssadiscordinvites@gmail.com'
     gmail_password = open("gmail_password.txt","r").read()
 
-    #just me for now
-    receiver_email = "dietterc@myumanitoba.ca"
+    receiver_email = email.dest
 
     message = MIMEMultipart("alternative")
     message["Subject"] = email.subject
@@ -288,7 +287,6 @@ def compileEmails(bodies,newInvites):
         finalEmails.append(Email(emails[goodIndexes[i]],SUBJECT,body))
 
     return finalEmails
-
 
 
 class Email:
